@@ -5,7 +5,7 @@
   var STORY_FILES = [
     "/stories/dappa.txt",
     "/stories/chameleon.txt",
-    "/stories/her-20%.txt"
+    "/stories/her_20percent.txt"
   ];
 
   var reader = document.getElementById("reader");
