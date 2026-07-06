@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reading Room — a small archive of stories</title>
+<meta name="description" content="A small archive of three stories — one drama, two thrillers — shelved like a card catalog and read like a book.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="grain"></div>
+
+  <header class="site-head">
+    <div class="site-head__inner">
+      <p class="eyebrow">est. tonight &middot; three stories on the shelf</p>
+      <h1 class="wordmark">The Reading&nbsp;Room</h1>
+      <p class="tagline">A small archive, kept the old way. Pull a drawer, find a card, read until the lamp burns down.</p>
+    </div>
+    <div class="lamp" aria-hidden="true"><div class="lamp__glow"></div></div>
+  </header>
+
+  <main class="catalog" id="catalog">
+
+    <!-- DRAMA DRAWER -->
+    <section class="drawer" data-genre="drama" data-count="1">
+      <button class="drawer__face" aria-expanded="false" aria-controls="drawer-drama">
+        <span class="drawer__pull" aria-hidden="true"></span>
+        <span class="drawer__label">
+          <span class="drawer__tab">Section I</span>
+          <span class="drawer__title">Drama</span>
+          <span class="drawer__meta">1 story &middot; quiet rooms, unfinished arguments</span>
+        </span>
+        <span class="drawer__chevron" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="drawer__body" id="drawer-drama">
+        <div class="drawer__inner">
+          <div class="index-cards" data-genre="drama"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THRILLER DRAWER -->
+    <section class="drawer" data-genre="thriller" data-count="2">
+      <button class="drawer__face" aria-expanded="false" aria-controls="drawer-thriller">
+        <span class="drawer__pull" aria-hidden="true"></span>
+        <span class="drawer__label">
+          <span class="drawer__tab">Section II</span>
+          <span class="drawer__title">Thriller</span>
+          <span class="drawer__meta">2 stories &middot; things that hold their breath</span>
+        </span>
+        <span class="drawer__chevron" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="drawer__body" id="drawer-thriller">
+        <div class="drawer__inner">
+          <div class="index-cards" data-genre="thriller"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <p>Turn the light off when you leave.</p>
+  </footer>
+
+  <!-- READER OVERLAY -->
+  <div class="reader" id="reader" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reader-title">
+    <div class="reader__scrim" data-close></div>
+    <article class="reader__page">
+      <button class="reader__close" data-close aria-label="Close story">
+        <span class="reader__close-ribbon" aria-hidden="true"></span>
+        <span>Close</span>
+      </button>
+      <div class="reader__scroll">
+        <p class="reader__eyebrow" id="reader-genre"></p>
+        <h2 class="reader__title" id="reader-title"></h2>
+        <p class="reader__byline" id="reader-byline"></p>
+        <div class="reader__rule" aria-hidden="true"></div>
+        <div class="reader__body" id="reader-body"></div>
+        <div class="reader__end" aria-hidden="true">&#8258;</div>
+      </div>
+    </article>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

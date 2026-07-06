@@ -1,0 +1,483 @@
+/* ============================================================
+   THE READING ROOM — a card-catalog archive of three stories
+   Tokens
+   ============================================================ */
+:root{
+  --bg:            #1B1613;
+  --bg-deep:       #120E0C;
+  --wood:          #2B2019;
+  --wood-hi:       #3D2C20;
+  --wood-lo:       #201712;
+  --brass:         #C9A15F;
+  --brass-dim:     #8A6E3F;
+  --parchment:     #F1E7D6;
+  --card:          #EFE3CC;
+  --card-shadow:   #b8a582;
+  --ink:           #241C15;
+  --ink-soft:      #5C4D3C;
+  --drama:         #C1703B;
+  --drama-deep:    #7A431F;
+  --thriller:      #5C7480;
+  --thriller-deep: #33454E;
+  --pin:           #9A3B3B;
+
+  --f-display: 'Fraunces', serif;
+  --f-read:    'Source Serif 4', Georgia, serif;
+  --f-mono:    'IBM Plex Mono', monospace;
+
+  --radius-card: 3px;
+  --radius-drawer: 6px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,161,95,0.08), transparent 60%),
+    var(--bg);
+  color: var(--parchment);
+  font-family: var(--f-read);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* subtle film-grain texture overlay */
+.grain{
+  position: fixed; inset:0; pointer-events:none; z-index: 1;
+  opacity: 0.05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a{ color: inherit; }
+
+::selection{ background: var(--brass); color: var(--ink); }
+
+button{ font-family: inherit; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-head{
+  position: relative;
+  padding: 5.5rem 1.5rem 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+.site-head__inner{
+  position: relative; z-index: 2;
+  max-width: 640px; margin: 0 auto;
+}
+.eyebrow{
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+  margin: 0 0 1.1rem;
+}
+.wordmark{
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  line-height: 1.02;
+  margin: 0 0 1.1rem;
+  color: var(--parchment);
+  letter-spacing: -0.01em;
+}
+.tagline{
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #C9BBA6;
+  max-width: 44ch;
+  margin: 0 auto;
+}
+
+/* small ambient lamp glow behind the header, evokes a desk lamp lit at night */
+.lamp{
+  position:absolute; left:50%; top:-120px; width:640px; height:420px;
+  transform: translateX(-50%);
+  z-index: 1; pointer-events:none;
+}
+.lamp__glow{
+  position:absolute; inset:0; border-radius:50%;
+  background: radial-gradient(ellipse at 50% 30%, rgba(193,112,59,0.28), rgba(193,112,59,0.05) 45%, transparent 70%);
+  filter: blur(4px);
+  animation: flicker 7s ease-in-out infinite;
+}
+@keyframes flicker{
+  0%, 100% { opacity: 1; }
+  48% { opacity: 0.94; }
+  50% { opacity: 0.82; }
+  52% { opacity: 0.96; }
+}
+
+/* ============================================================
+   CATALOG — the two drawers
+   ============================================================ */
+.catalog{
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+.drawer{
+  border-radius: var(--radius-drawer);
+  background: linear-gradient(180deg, var(--wood-hi), var(--wood) 40%, var(--wood-lo));
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 18px 40px -18px rgba(0,0,0,0.65),
+    0 2px 0 rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.drawer__face{
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.35rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+.drawer__face::after{
+  /* wood-grain hint */
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 5px);
+  opacity: 0.5; pointer-events: none;
+}
+
+.drawer__pull{
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #E8CE96, var(--brass) 55%, var(--brass-dim) 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+.drawer__label{ display:flex; flex-direction: column; gap: 0.28rem; min-width:0; }
+.drawer__tab{
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.drawer__title{
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.55rem;
+  color: var(--parchment);
+}
+.drawer__meta{
+  font-size: 0.85rem;
+  color: #B7A78E;
+}
+[data-genre="thriller"] .drawer__tab{ color: #A9C0CB; }
+[data-genre="thriller"] .drawer__pull{
+  background: radial-gradient(circle at 35% 30%, #DCE6E9, var(--thriller) 55%, var(--thriller-deep) 100%);
+}
+
+.drawer__chevron{
+  font-size: 0.9rem;
+  color: var(--brass-dim);
+  transition: transform 0.35s ease;
+  justify-self: end;
+}
+.drawer__face[aria-expanded="true"] .drawer__chevron{ transform: rotate(180deg); }
+
+.drawer__body{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(.4,0,.2,1);
+}
+.drawer__body.is-open{ max-height: 1400px; }
+
+.drawer__inner{
+  padding: 0.25rem 1.5rem 1.75rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18), transparent 12%);
+}
+
+/* index cards inside a drawer */
+.index-cards{
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-top: 0.5rem;
+}
+
+.index-card{
+  --accent: var(--drama);
+  --accent-deep: var(--drama-deep);
+  position: relative;
+  background: linear-gradient(180deg, var(--card), #E4D6BB);
+  color: var(--ink);
+  border-radius: var(--radius-card);
+  padding: 1.1rem 1.25rem 1.1rem 1.65rem;
+  box-shadow: 0 10px 18px -10px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.5) inset;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: card-in 0.45s ease forwards;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.index-card:hover, .index-card:focus-visible{
+  transform: translateY(2px);
+  box-shadow: 0 6px 14px -8px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.5) inset;
+}
+.index-card::before{
+  /* punch hole, like a real library card */
+  content: "";
+  position: absolute; left: 0.55rem; top: 50%; transform: translateY(-50%);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--bg-deep);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+}
+.index-card::after{
+  content: "";
+  position: absolute; left: 0; top: 10%; bottom: 10%;
+  width: 4px; border-radius: 2px;
+  background: var(--accent);
+}
+[data-genre="thriller"] .index-card{ --accent: var(--thriller); --accent-deep: var(--thriller-deep); }
+
+@keyframes card-in{
+  to{ opacity: 1; transform: translateY(0); }
+}
+.index-card:nth-child(1){ animation-delay: 0.04s; }
+.index-card:nth-child(2){ animation-delay: 0.12s; }
+.index-card:nth-child(3){ animation-delay: 0.2s; }
+
+.index-card__main{ min-width: 0; }
+.index-card__kicker{
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.index-card__title{
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0 0 0.35rem;
+  color: var(--ink);
+}
+.index-card__blurb{
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.index-card__aside{
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  text-align: right;
+  white-space: nowrap;
+  padding-top: 0.1rem;
+}
+.load-error{
+  font-family: var(--f-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #C9BBA6;
+  padding: 1rem 0.25rem;
+}
+.load-error code{
+  background: rgba(0,0,0,0.3);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+.index-card__aside .open-hint{
+  display:block; margin-top: 0.5rem;
+  color: var(--accent-deep);
+  font-weight: 500;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-foot{
+  text-align: center;
+  padding: 2rem 1.5rem 4rem;
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  color: var(--brass-dim);
+  position: relative; z-index: 2;
+}
+
+/* ============================================================
+   READER — full-page "open book" overlay
+   ============================================================ */
+.reader{
+  position: fixed; inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+}
+.reader.is-open{
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+.reader__scrim{
+  position: absolute; inset: 0;
+  background: rgba(9,7,5,0.82);
+  backdrop-filter: blur(3px);
+}
+.reader__page{
+  position: relative;
+  z-index: 1;
+  width: min(720px, 92vw);
+  max-height: 88vh;
+  margin: 4vh auto;
+  background: var(--parchment);
+  color: var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6);
+  overflow: hidden;
+  transform: translateY(18px) scale(0.985);
+  transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.reader.is-open .reader__page{ transform: translateY(0) scale(1); }
+
+.reader__close{
+  position: absolute;
+  top: 0; right: 1.75rem;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.15rem;
+  background: var(--pin);
+  color: #F6E9E9;
+  border: none;
+  padding: 0.5rem 0.85rem 0.7rem;
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0 0 4px 4px;
+  z-index: 2;
+  box-shadow: 0 6px 12px -6px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.reader__close:hover{ background: #B24747; transform: translateY(1px); }
+
+.reader__scroll{
+  overflow-y: auto;
+  padding: 3.25rem 3rem 4rem;
+}
+@media (max-width: 640px){
+  .reader__scroll{ padding: 3.25rem 1.35rem 3.5rem; }
+  .reader__close{ right: 0.75rem; }
+}
+
+.reader__eyebrow{
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--drama-deep);
+  margin: 0 0 0.6rem;
+}
+.reader[data-genre="thriller"] .reader__eyebrow{ color: var(--thriller-deep); }
+
+.reader__title{
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  line-height: 1.12;
+  margin: 0 0 0.5rem;
+}
+.reader__byline{
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.reader__rule{
+  width: 48px; height: 2px;
+  background: var(--ink-soft);
+  opacity: 0.35;
+  margin: 1.6rem 0 1.8rem;
+}
+.reader__body{
+  font-family: var(--f-read);
+  font-size: 1.08rem;
+  line-height: 1.75;
+  columns: 1;
+}
+.reader__body p{
+  margin: 0 0 1.15em;
+}
+.reader__body p:first-of-type::first-letter{
+  font-family: var(--f-display);
+  font-size: 3.1rem;
+  font-weight: 600;
+  float: left;
+  line-height: 0.8;
+  padding: 0.1rem 0.12em 0 0;
+  color: var(--drama-deep);
+}
+.reader[data-genre="thriller"] .reader__body p:first-of-type::first-letter{
+  color: var(--thriller-deep);
+}
+.reader__end{
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--ink-soft);
+  opacity: 0.5;
+  margin-top: 1rem;
+}
+
+/* focus visibility for keyboard users */
+button:focus-visible, .index-card:focus-visible{
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 560px){
+  .site-head{ padding: 4rem 1.25rem 3rem; }
+  .drawer__face{ padding: 1.1rem 1.1rem; gap: 0.8rem; }
+  .drawer__title{ font-size: 1.3rem; }
+  .index-card{ grid-template-columns: 1fr; }
+  .index-card__aside{ text-align: left; }
+}
